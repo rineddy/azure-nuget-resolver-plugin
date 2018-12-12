@@ -4,7 +4,8 @@
         "test": "cd buildAndReleaseTask && npm run test",
         "test_trace": "cd buildAndReleaseTask && npm run test_trace",
         "compile": "cd buildAndReleaseTask && tsc -b",
-        "release": "tfx extension create --manifest-globs vss-extension.json --rev-version"
+        "release": "tfx extension create --manifest-globs vss-extension.json --rev-version",
+        "publish": "tfx extension publish --manifest-globs vss-extension.json --share-with eratovoson"
     },
     "devDependencies": {
         "@types/node": "^10.12.12",
