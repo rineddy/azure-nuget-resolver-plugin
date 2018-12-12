@@ -8,7 +8,6 @@ async function run(): Promise<void> {
             return;
         }
         console.log('Hello', inputString);
-        Task.
     }
     catch (err) {
         Task.setResult(Task.TaskResult.Failed, err.message);

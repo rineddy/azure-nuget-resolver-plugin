@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "postinstall": "cd buildAndReleaseTask && npm install",
+        "test": "cd buildAndReleaseTask && npm run test",
+        "test_trace": "cd buildAndReleaseTask && npm run test_trace",
+        "compile": "cd buildAndReleaseTask && tsc -b",
+        "release": "tfx extension create --manifest-globs vss-extension.json --rev-version"
+    },
+    "devDependencies": {
+        "@types/node": "^10.12.12",
+        "tslint": "^5.11.0",
+        "typescript": "^3.1.3"
+    }
+}
