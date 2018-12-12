@@ -2,11 +2,9 @@
     "id": "D5D888E8-D31C-4A2F-BCF1-770E2F58CC6C",
     "name": "nuget-version-resolver",
     "friendlyName": "NuGet Version Resolver",
-    "description": "This task will resolve NuGet wildcard versions accoding to a 'prerelease/stable' flag",
+    "description": "This task will resolve NuGet wildcard versions accoding to the flag: 'prerelease' or 'stable' ",
     "helpMarkDown": "",
-    "category": [
-        "Azure Pipelines"
-    ],
+    "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
         "Major": 0,
