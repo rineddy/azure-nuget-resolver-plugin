@@ -1,3 +1,4 @@
-*.js
+**/*.js
+**/*.js.log
 *.vsix
 node_modules
