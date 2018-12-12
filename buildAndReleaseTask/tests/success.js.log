@@ -1,0 +1,140 @@
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:19936) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:19592) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:20120) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:20056) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:2292) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:8172) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:10224) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:17768) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:2200) Warning: Use Cipheriv for counter mode of aes-256-ctr
+
+##vso[task.debug]agent.TempDirectory=undefined
+##vso[task.debug]agent.workFolder=undefined
+##vso[task.debug]loading inputs and endpoints
+##vso[task.debug]loading INPUT_SAMPLESTRING
+##vso[task.debug]loaded 1
+##vso[task.debug]Agent.ProxyUrl=undefined
+##vso[task.debug]Agent.CAInfo=undefined
+##vso[task.debug]Agent.ClientCert=undefined
+##vso[task.debug]Agent.SkipCertValidation=undefined
+##vso[task.debug]samplestring=human
+Hello human
+
+STDERR: (node:19684) Warning: Use Cipheriv for counter mode of aes-256-ctr
+

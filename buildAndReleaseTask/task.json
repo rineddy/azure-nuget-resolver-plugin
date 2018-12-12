@@ -1,0 +1,32 @@
+{
+    "id": "D5D888E8-D31C-4A2F-BCF1-770E2F58CC6C",
+    "name": "nuget-version-resolver",
+    "friendlyName": "NuGet Version Resolver",
+    "description": "This task will resolve NuGet wildcard versions accoding to a 'prerelease/stable' flag",
+    "helpMarkDown": "",
+    "category": [
+        "Build"
+    ],
+    "author": "Eddy R.",
+    "version": {
+        "Major": 0,
+        "Minor": 9,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Echo $(samplestring)",
+    "inputs": [
+        {
+            "name": "samplestring",
+            "type": "string",
+            "label": "Sample String",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "A sample string"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
