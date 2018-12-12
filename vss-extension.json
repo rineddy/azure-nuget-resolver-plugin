@@ -2,8 +2,8 @@
     "manifestVersion": 1,
     "id": "nuget-version-delivery-task",
     "name": "Nuget Version Delivery Task",
-    "version": "0.9.1",
-    "publisher": "eddy-r",
+    "version": "0.9.6",
+    "publisher": "eddyr-gop",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -11,8 +11,7 @@
     ],
     "description": "This task will resolve NuGet wildcard versions accoding to a 'prerelease/stable' flag",
     "categories": [
-        "Azure Pipelines",
-        "Build"
+        "Azure Pipelines"
     ],
     "icons": {
         "default": "images/extension-icon.png"

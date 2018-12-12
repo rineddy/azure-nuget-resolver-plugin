@@ -5,7 +5,7 @@
     "description": "This task will resolve NuGet wildcard versions accoding to a 'prerelease/stable' flag",
     "helpMarkDown": "",
     "category": [
-        "Build"
+        "Azure Pipelines"
     ],
     "author": "Eddy R.",
     "version": {
