@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "nuget-version-delivery-task",
     "name": "Nuget Version Delivery Task",
-    "version": "0.9.9",
+    "version": "0.9.16",
     "publisher": "eddyr-gop",
     "targets": [
         {
