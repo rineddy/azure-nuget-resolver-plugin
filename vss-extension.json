@@ -1,20 +1,20 @@
 {
     "manifestVersion": 1,
-    "id": "nuget-version-delivery-task",
-    "name": "Nuget Version Delivery Task",
-    "version": "0.9.16",
+    "id": "nuget-versioning-task",
+    "name": "Nuget Versioning Task",
+    "description": "Tool used to resolve Nuget package version in csproj file",
+    "version": "0.9.12",
     "publisher": "eddyr-gop",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],
-    "description": "This task will resolve NuGet wildcard versions accoding to a 'prerelease/stable' flag",
+    ],    
     "categories": [
         "Azure Pipelines"
     ],
     "icons": {
-        "default": "images/extension-icon.png"
+        "default": "images/extension-icon.png"        
     },
     "files": [
         {
@@ -23,7 +23,7 @@
     ],
     "contributions": [
         {
-            "id": "nuget-version-delivery-task-id",
+            "id": "nugetversioning",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"

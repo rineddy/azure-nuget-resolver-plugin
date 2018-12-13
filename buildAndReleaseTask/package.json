@@ -1,34 +1,25 @@
 {
-    "name": "nuget-version-delivery",
-    "displayName": "NuGet Version Delivery",
-    "author": "Eddy R.",
-    "publisher": "eddy-r",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/rineddy/azure-vsts-pipelines-task"
-    },
-    "icon": "../images/extension-icon.png",
-    "version": "1.0.0",
-    "keywords": [
-        "Nuget",
-        "Package",
-        "Versioning"
-    ],
-    "license": "ISC",
-    "main": "index.js",
-    "scripts": {
-        "test": "npm run compile && mocha tests/_suite.js",
-        "test_trace": "npm run compile && set TASK_TEST_TRACE=1 && mocha tests/_suite.js",
-        "compile": "tsc -b"
-    },
-    "dependencies": {
-        "azure-pipelines-task-lib": "^2.7.7"
-    },
-    "devDependencies": {
-        "@types/mocha": "^5.2.5",
-        "@types/node": "^10.12.12",
-        "@types/q": "^1.5.1",
-        "tslint": "^5.11.0",
-        "typescript": "^3.1.3"
-    }
+  "name": "nugetversioning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run compile && mocha tests/_suite.js",
+    "test_trace": "npm run compile && set TASK_TEST_TRACE=1 && mocha tests/_suite.js",
+    "compile": "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "icon": "../images/extension-icon.png",
+  "license": "ISC",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^2.7.7"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.12",
+    "@types/q": "^1.5.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.3"
+  }
 }

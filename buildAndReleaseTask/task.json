@@ -1,25 +1,37 @@
 {
-    "id": "D5D888E8-D31C-4A2F-BCF1-770E2F58CC6C",
-    "name": "nuget-version-resolver",
-    "friendlyName": "NuGet Version Resolver",
-    "description": "This task will resolve NuGet wildcard versions accoding to the flag: 'prerelease' or 'stable' ",
+    "id": "6c45ebd7-7597-4e28-b043-c2721d9e4abe",
+    "name": "nugetversioning",
+    "friendlyName": "Nuget Versioning",
+    "description": "Tool used to resolve Nuget package version in csproj file",
     "helpMarkDown": "",
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 0,
-        "Minor": 9,
+        "Major": 1,
+        "Minor": 0,
         "Patch": 0
     },
-    "instanceNameFormat": "Echo $(samplestring)",
+    "instanceNameFormat": "Echo $(samplestring) - version to target: $(versionToTarget)",
     "inputs": [
         {
             "name": "samplestring",
-            "type": "string",
             "label": "Sample String",
+            "helpMarkDown": "A sample string",
+            "type": "string",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "A sample string"
+            "required": true
+        },
+        {
+            "name": "versionToTarget",
+            "label": "Version To Target",
+            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+            "type": "pickList",
+            "defaultValue": "stable",
+            "options": {
+                "stable": "Find lastest stable version",
+                "prerelease": "Find lastest prerelease Version"
+            },
+            "required": true
         }
     ],
     "execution": {
