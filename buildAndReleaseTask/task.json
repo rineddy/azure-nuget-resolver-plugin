@@ -11,14 +11,14 @@
         "Minor": 0,
         "Patch": 0
     },
-    "instanceNameFormat": "Echo $(samplestring) - version to target: $(versionToTarget)",
+    "instanceNameFormat": "Echo $(searchProjectFile) - version to target: $(versionToTarget)",
     "inputs": [
         {
-            "name": "samplestring",
-            "label": "Sample String",
-            "helpMarkDown": "A sample string",
+            "name": "searchProjectFile",
+            "label": "Search Project File",
+            "helpMarkDown": "Search .csproj file",
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "**/*.csproj",
             "required": true
         },
         {
