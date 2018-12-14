@@ -1,4 +1,5 @@
 import Task from 'azure-pipelines-task-lib/task';
+import * as Path from 'path';
 
 async function run(): Promise<void> {
     try {
@@ -9,8 +10,9 @@ async function run(): Promise<void> {
         }
         console.log('Searching: ', searchProjectFile);
         console.log('Working directory: ', __dirname);
-
-        let files = Task.find(__dirname + '/' + searchProjectFile);
+        // const searching = Path.join(__dirname, '**/*.js'  /*searchProjectFile*/);
+        // console.log('Searching: ', searching);
+        let files = Task.findMatch(__dirname, '*.js');
         files.forEach(file => {
             console.log(file);
         });
