@@ -1,0 +1,45 @@
+{
+    "id": "7cc908ff-c485-45ea-90a6-6ac6f904687c",
+    "name": "nugetversioning",
+    "friendlyName": "Nuget Versioning PS",
+    "description": "Tool used to resolve Nuget package version in csproj file",
+    "helpMarkDown": "Nuget Version Resolver PS",
+    "category": "Azure Pipelines",
+    "author": "Eddy R.",
+    "version": {
+        "Major": 5,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Update $(searchProjectFile) with $(versionToTarget) package version [PS]",
+    "inputs": [
+        {
+            "name": "searchProjectFile",
+            "label": "Search project file",
+            "helpMarkDown": "Search .csproj file",
+            "type": "string",
+            "defaultValue": "**/*.csproj",
+            "required": true
+        },
+        {
+            "name": "versionToTarget",
+            "label": "Version to target",
+            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+            "type": "pickList",
+            "defaultValue": "stable",
+            "options": {
+                "stable": "Find lastest stable version",
+                "prerelease": "Find lastest prerelease Version"
+            },
+            "required": true
+        }
+    ],
+    "demands": [
+        "azureps"
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "main.ps1"
+        }
+    }
+}

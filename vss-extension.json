@@ -3,22 +3,25 @@
     "id": "nuget-versioning-task",
     "name": "Nuget Versioning Task",
     "description": "Tool used to resolve Nuget package version in csproj file",
-    "version": "0.9.19",
+    "version": "0.9.27",
     "publisher": "eddyr-gop",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],    
+    ],
     "categories": [
         "Azure Pipelines"
     ],
     "icons": {
-        "default": "images/extension-icon.png"        
+        "default": "images/extension-icon.png"
     },
     "files": [
         {
             "path": "buildAndReleaseTask"
+        },
+        {
+            "path": "buildAndReleaseTaskPS"
         }
     ],
     "contributions": [
@@ -30,6 +33,16 @@
             ],
             "properties": {
                 "name": "buildAndReleaseTask"
+            }
+        },
+        {
+            "id": "nugetversioningps",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "buildAndReleaseTaskPS"
             }
         }
     ]
