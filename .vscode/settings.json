@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+		"**/node_modules": true,
+		"**/*.js": true,     
+		"**/package-lock.json": true
+	},
+	"search.exclude": {
+		"**/*.js": true,     
+		"**/node_modules": true 
+	},
+	"typescript.tsc.autoDetect": "off",
+	"typescript.preferences.quoteStyle": "single",
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true,
+	"editor.formatOnType": true,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"files.trimTrailingWhitespace": true,
+	"tslint.autoFixOnSave": true,
+	"tslint.enable": true,
+}
