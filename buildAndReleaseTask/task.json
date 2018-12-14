@@ -1,42 +1,42 @@
 {
-    "id": "6c45ebd7-7597-4e28-b043-c2721d9e4abe",
-    "name": "nugetversioning",
-    "friendlyName": "Nuget Versioning",
-    "description": "Tool used to resolve Nuget package version in csproj file",
-    "helpMarkDown": "",
-    "category": "Azure Pipelines",
-    "author": "Eddy R.",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 0
-    },
-    "instanceNameFormat": "Echo $(searchProjectFile) - version to target: $(versionToTarget)",
-    "inputs": [
-        {
-            "name": "searchProjectFile",
-            "label": "Search Project File",
-            "helpMarkDown": "Search .csproj file",
-            "type": "string",
-            "defaultValue": "**/*.csproj",
-            "required": true
-        },
-        {
-            "name": "versionToTarget",
-            "label": "Version To Target",
-            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
-            "type": "pickList",
-            "defaultValue": "stable",
-            "options": {
-                "stable": "Find lastest stable version",
-                "prerelease": "Find lastest prerelease Version"
-            },
-            "required": true
-        }
-    ],
-    "execution": {
-        "Node": {
-            "target": "index.js"
-        }
-    }
+	"id": "6c45ebd7-7597-4e28-b043-c2721d9e4abe",
+	"name": "nugetversioning",
+	"friendlyName": "Nuget Versioning",
+	"description": "Tool used to resolve Nuget package version in csproj file",
+	"helpMarkDown": "",
+	"category": "Azure Pipelines",
+	"author": "Eddy R.",
+	"version": {
+		"Major": 1,
+		"Minor": 0,
+		"Patch": 0
+	},
+	"instanceNameFormat": "Update $(searchProjectFile) with $(versionToTarget) package version",
+	"inputs": [
+		{
+			"name": "searchProjectFile",
+			"label": "Search project file",
+			"helpMarkDown": "Search .csproj file",
+			"type": "string",
+			"defaultValue": "**/*.csproj",
+			"required": true
+		},
+		{
+			"name": "versionToTarget",
+			"label": "Version to target",
+			"helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+			"type": "pickList",
+			"defaultValue": "stable",
+			"options": {
+				"stable": "Find lastest stable version",
+				"prerelease": "Find lastest prerelease Version"
+			},
+			"required": true
+		}
+	],
+	"execution": {
+		"Node": {
+			"target": "index.js"
+		}
+	}
 }
