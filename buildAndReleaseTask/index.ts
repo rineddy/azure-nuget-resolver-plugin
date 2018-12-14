@@ -8,7 +8,9 @@ async function run(): Promise<void> {
             return;
         }
         console.log('Searching: ', searchProjectFile);
-        let files = Task.find(searchProjectFile);
+        console.log('Working directory: ', __dirname);
+
+        let files = Task.find(__dirname + '/' + searchProjectFile);
         files.forEach(file => {
             console.log(file);
         });
