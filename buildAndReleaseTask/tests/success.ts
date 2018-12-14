@@ -5,5 +5,5 @@ import Path from 'path';
 let taskPath = Path.join(__dirname, '..', 'index.js');
 let taskRunner: MockRun.TaskMockRunner = new MockRun.TaskMockRunner(taskPath);
 
-taskRunner.setInput('samplestring', 'human');
+taskRunner.setInput('searchProjectFile', '*.csproj');
 taskRunner.run();

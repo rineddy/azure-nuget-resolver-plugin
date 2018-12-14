@@ -3,11 +3,11 @@ import Task from 'azure-pipelines-task-lib/task';
 async function run(): Promise<void> {
     try {
         const searchProjectFile: string = Task.getInput('searchProjectFile', true);
-        if (searchProjectFile === 'bad') {
-            Task.setResult(Task.TaskResult.Failed, 'Bad input was given');
+        if (!searchProjectFile.match(/\.csproj$/i)) {
+            Task.setResult(Task.TaskResult.Failed, 'Search project file: invalid input');
             return;
         }
-        console.log('Hello', searchProjectFile);
+        console.log('Searching: ', searchProjectFile);
     }
     catch (err) {
         Task.setResult(Task.TaskResult.Failed, err.message);

@@ -24,7 +24,7 @@ describe('Testing the TFS extension...', function () {
         Assert.equal(testRunner.warningIssues.length, 0, 'should have no warnings');
         Assert.equal(testRunner.errorIssues.length, 0, 'should have no errors');
         console.log(testRunner.stdout);
-        Assert.equal(testRunner.stdout.indexOf('Hello human') >= 0, true, 'should display Hello human');
+        Assert.equal(testRunner.stdout.indexOf('Searching') >= 0, true, `Should display 'Searching'`);
         done();
     });
 
@@ -39,8 +39,9 @@ describe('Testing the TFS extension...', function () {
         Assert.equal(testRunner.succeeded, false, 'should have failed');
         Assert.equal(testRunner.warningIssues, 0, 'should have no warnings');
         Assert.equal(testRunner.errorIssues.length, 1, 'should have 1 error issue');
-        Assert.equal(testRunner.errorIssues[0], 'Bad input was given', 'error issue output');
-        Assert.equal(testRunner.stdout.indexOf('Hello bad'), -1, 'Should not display Hello bad');
+        Assert.equal(testRunner.errorIssues[0], `Search project file: invalid input`, 'error issue output');
+        console.log(testRunner.stdout);
+        Assert.equal(testRunner.stdout.indexOf('Searching'), -1, `Should not display 'Searching'`);
         done();
     });
 });
