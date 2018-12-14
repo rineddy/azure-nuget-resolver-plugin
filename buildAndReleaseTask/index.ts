@@ -8,6 +8,10 @@ async function run(): Promise<void> {
             return;
         }
         console.log('Searching: ', searchProjectFile);
+        let files = Task.find(searchProjectFile);
+        files.forEach(file => {
+            console.log(file);
+        });
     }
     catch (err) {
         Task.setResult(Task.TaskResult.Failed, err.message);
