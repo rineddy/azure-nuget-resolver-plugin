@@ -40,7 +40,11 @@ try {
 
         $element = [System.Xml.XmlElement]($xmlDoc.GetElementsByTagName("PackageReference") | Select-Object -First 1)
         if ($element) {
-            write-host "Package: $($element.Attributes["Include"]) - Version: $($element.Attributes["Version"])"
+            write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
+            $element.Attributes["Version"].Value = "4.0"
+            write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
+            Write-Host "Writing file: $($fileName.fullname)"
+            $xmlDoc.Save($fileName.fullname)
         }
         else {
             Write-Warning "No 'PackageReference' found in $($fileName.fullname)"
