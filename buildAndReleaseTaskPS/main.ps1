@@ -42,6 +42,15 @@ try {
         if ($element) {
             write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
 
+
+            # $res = Find-Package -Name *uery* -AllVersions #-Source https://api.nuget.org/v2/     #-Filter NUnit  -ListAvailable
+            # echo $res.length
+
+            # $res | % {
+            #     echo $_.name
+            #     echo  $_.version
+            # }
+
             write-host "****** UPDATE PACKAGE VERSION *********"
             $element.Attributes["Version"].Value = "4.0"
             write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
