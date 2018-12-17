@@ -41,6 +41,8 @@ try {
         $element = [System.Xml.XmlElement]($xmlDoc.GetElementsByTagName("PackageReference") | Select-Object -First 1)
         if ($element) {
             write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
+
+            write-host "****** UPDATE PACKAGE VERSION *********"
             $element.Attributes["Version"].Value = "4.0"
             write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
             Write-Host "Writing file: $($fileName.fullname)"
