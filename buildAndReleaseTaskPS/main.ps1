@@ -43,14 +43,18 @@ try
         $element = [System.Xml.XmlElement]($xmlDoc.GetElementsByTagName("PackageReference") | Select-Object -First 1)
         if ($element)
         {
-            write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
+            $packageId = $element.Attributes["Include"].Value
+            $packageVersion = $element.Attributes["Version"].Value
+            write-host "PackageReference: $packageId - Version: $packageVersion"
 
             write-host "****** RESOLVE TARGET VERSION *********"
-            Get-PackageSource
-            $res = Find-Package -Name *jquery* #-Source 'https://api.nuget.org/v3/index.json','http://www.nuget.org/api/v2/' -AllVersions
-            Write-Host "Listing Packages: $($res.length)"
-            $res | ForEach-Object {
-                Write-Host "Found Package: $($_.name) - Version: $($_.version)"
+            $nugetJson = Invoke-RestMethod -Uri "https://api-v2v3search-0.nuget.org/query?q=PackageId:%22$packageId%22&prerelease=true"
+            if ($nugetJson.totalHits -gt 0)
+            {
+                Write-Host "Listing Packages: $packageId"
+                $nugetJson.data.versions | ForEach-Object {
+                    Write-Host "Found Package Version: $($_.version)"
+                }
             }
 
             write-host "****** UPDATE PACKAGE VERSION *********"
