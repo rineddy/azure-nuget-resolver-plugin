@@ -51,17 +51,18 @@ try
             $nugetJson = Invoke-RestMethod -Uri "https://api-v2v3search-0.nuget.org/query?q=PackageId:%22$packageId%22&prerelease=true"
             if ($nugetJson.totalHits -gt 0)
             {
+                $newVersion = '4.0'
                 Write-Host "Listing Packages: $packageId"
                 $nugetJson.data.versions | ForEach-Object {
                     Write-Host "Found Package Version: $($_.version)"
                 }
-            }
 
-            write-host "****** UPDATE PACKAGE VERSION *********"
-            $element.Attributes["Version"].Value = "4.0"
-            write-host "PackageReference: $($element.Attributes["Include"].Value) - Version: $($element.Attributes["Version"].Value)"
-            Write-Host "Writing file: $($fileName.fullname)"
-            $xmlDoc.Save($fileName.fullname)
+                write-host "****** UPDATE PACKAGE VERSION *********"
+                $element.Attributes["Version"].Value = "4.0"
+                write-host "PackageReference: $packageId - Version: $newVersion"
+                Write-Host "Writing file: $($fileName.fullname)"
+                $xmlDoc.Save($fileName.fullname)
+            }
         }
         else
         {
