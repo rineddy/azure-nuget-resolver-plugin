@@ -11,65 +11,76 @@ param()
 #     Write-Host ("Setting variable " + $varName + " to '" + $varValue + "'")
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
+function Resolve-PackageVersion
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$packageId
+    )
+
+    write-host "##[debug] ****** RESOLVE TARGET VERSION *********"
+    $jsonResult = Invoke-RestMethod -Uri "https://api-v2v3search-0.nuget.org/query?q=PackageId:%22$packageId%22&prerelease=true"
+    if ($jsonResult.totalHits -gt 0)
+    {
+        $newVersion = '[NO_VERSION]'
+        write-host "##[debug] Search Package Versions for: $packageId"
+        ForEach ($v in $jsonResult.data.versions)
+        {
+            write-host "##[debug] Found Version: $($v.version)"
+            $newVersion = $v.version
+        }
+        return $newVersion
+    }
+}
 
 # For more information on the VSTS Task SDK:
 # https://github.com/Microsoft/vsts-task-lib
 Trace-VstsEnteringInvocation $MyInvocation
 try
 {
-    write-host "****** ENV *********"
+    write-host "##[section] ****** SET UP VARIABLES *********"
     $binDir = $env:BUILD_BINARIESDIRECTORY
     $srcDir = $env:BUILD_SOURCESDIRECTORY
     write-host "srcDir = $srcDir"
     write-host "binDir = $binDir"
-
-    write-host "****** VARIABLES *********"
     $searchProjectFile = Get-VstsInput -Name searchProjectFile -Require
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     write-host "searchProjectFile = $searchProjectFile"
     write-host "projectToTarget = $versionToTarget"
 
-    write-host "****** SEARCH PROJECT *********"
-    $filesFound = Get-ChildItem -Path $searchProjectFile -Recurse
-    if ($filesFound.Count -eq 0) { Write-Warning "No files matching pattern found." }
-    if ($filesFound.Count -gt 1) { Write-Warning "Multiple proj files found."       }
+    write-host "##[section] ****** MODIFY PROJECT FILES *********"
+    $projectFiles = Get-ChildItem -Path "$srcDir\$searchProjectFile" -Recurse
+    if ($projectFiles.Count -eq 0) { Write-Host "##vso[task.logissue type=warning;]Project file not found" }
 
-    foreach ($fileName in $filesFound)
+    foreach ($projectFile in $projectFiles)
     {
-        Write-Host "Reading file: $($fileName.fullname)"
+        Write-Host "Reading project file: $($projectFile.fullname)"
         $xmlDoc = New-Object -TypeName System.Xml.XmlDocument
-        $xmlDoc.Load($fileName)
+        $xmlDoc.Load($projectFile)
 
-        $element = [System.Xml.XmlElement]($xmlDoc.GetElementsByTagName("PackageReference") | Select-Object -First 1)
-        if ($element)
+        $packageRefs = $xmlDoc.GetElementsByTagName("PackageReference")
+        if ($packageRefs.legnth -eq 0) { Write-Host "Package not found in $($fileName.name)" }
+
+        foreach ($packageRef in $packageRefs)
         {
-            $packageId = $element.Attributes["Include"].Value
-            $packageVersion = $element.Attributes["Version"].Value
-            write-host "PackageReference: $packageId - Version: $packageVersion"
-
-            write-host "****** RESOLVE TARGET VERSION *********"
-            $nugetJson = Invoke-RestMethod -Uri "https://api-v2v3search-0.nuget.org/query?q=PackageId:%22$packageId%22&prerelease=true"
-            if ($nugetJson.totalHits -gt 0)
+            $packageId = $packageRef.Attributes["Include"].Value
+            $packageVersion = $packageRef.Attributes["Version"].Value
+            if ($packageVersion -eq '*')
             {
-                $newVersion = '4.0'
-                Write-Host "Listing Packages: $packageId"
-                $nugetJson.data.versions | ForEach-Object {
-                    Write-Host "Found Package Version: $($_.version)"
-                }
-
-                write-host "****** UPDATE PACKAGE VERSION *********"
-                $element.Attributes["Version"].Value = "4.0"
-                write-host "PackageReference: $packageId - Version: $newVersion"
-                Write-Host "Writing file: $($fileName.fullname)"
-                $xmlDoc.Save($fileName.fullname)
+                $packageVersion = Resolve-PackageVersion $packageId
+                $packageRef.SetAttribute("Version", $packageVersion)
+                $isProjectFileModified = $true
             }
+            write-host "Package: $packageId - Version: $packageVersion"
         }
-        else
+
+        if ($isProjectFileModified)
         {
-            Write-Warning "No 'PackageReference' found in $($fileName.fullname)"
+            Write-Host "Writing project file: $($projectFile.fullname)"
+            $xmlDoc.Save($projectFile.fullname)
+            $isProjectFileModified = $false
         }
     }
-
 }
 finally
 {
