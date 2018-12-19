@@ -7,19 +7,27 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 11,
+        "Major": 16,
         "Minor": 0,
         "Patch": 1
     },
-    "instanceNameFormat": "Update $(searchProjectFile) with $(versionToTarget) package version [PS]",
+    "instanceNameFormat": "Resolve project package versions with lastest $(versionToTarget) version [PS]",
     "inputs": [
         {
-            "name": "searchProjectFile",
+            "name": "pathToProjects",
             "label": "Path to project(s)",
             "helpMarkDown": "Search .csproj file",
             "type": "string",
             "defaultValue": "**/*.csproj",
             "required": true
+        },
+        {
+            "name": "pathToNugetConfig",
+            "label": "Path to NuGet.Config",
+            "helpMarkDown": "Search NuGet.Config file",
+            "type": "string",
+            "defaultValue": "**/NuGet.Config",
+            "required": false
         },
         {
             "name": "versionToTarget",
@@ -29,7 +37,7 @@
             "defaultValue": "stable",
             "options": {
                 "stable": "Find lastest stable version",
-                "prerelease": "Find lastest stable or prerelease version"
+                "stable or prerelease": "Find lastest stable or prerelease version"
             },
             "required": true
         }
