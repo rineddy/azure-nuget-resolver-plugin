@@ -35,8 +35,6 @@ function Get-SortedSemanticVersions
         $key = $key -replace "\d*(\d{8})", "`$1"
         $key = "$key $pre"
 
-        echo $key
-
         $order[$key] = $value
     }
 
@@ -65,11 +63,12 @@ function Resolve-PackageVersion
         if ($searchResults.totalHits -gt 0)
         {
             $packageData = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
-            $packageVersions = Get-SortedSemanticVersions $packageData.versions       ## Sort semantic version X.Y.Z.Rev-Prerelease
-            ForEach ($v in $packageVersions)
+            $packageVersions = $packageData.versions | ForEach-Object { $_.version }
+            $packageVersions = Get-SortedSemanticVersions $packageVersions       ## Sort semantic version X.Y.Z.Rev-Prerelease
+            ForEach ($packageVersion in $packageVersions)
             {
-                write-host "##[debug] Found Version: $($v.version)"
-                $newVersion = $v.version
+                write-host "##[debug] Found Version: $packageVersion"
+                $newVersion = $packageVersion
             }
         }
         if ($newVersion -ne '[NO_VERSION]') { break }
