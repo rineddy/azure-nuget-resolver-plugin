@@ -11,6 +11,38 @@ param()
 #     Write-Host ("Setting variable " + $varName + " to '" + $varValue + "'")
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
+
+function Get-SortedSemanticVersions
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$versions
+    )
+
+    $order = [ordered]@{}
+    $versions | foreach-object {
+        [string]$value = $_
+        $parts = $_.Split('-')
+        [string]$key = $parts[0]
+        [string]$pre = 'stable'
+        if ($parts.length -gt 1) {$pre = "-" + $parts[1]}
+
+        for ($i = ($value.Split('.').Length - 1); $i -lt 4; $i++)
+        {
+            $key = $key + ".0"
+        }
+        $key = $key -replace "(\d+)", "00000000`$1"
+        $key = $key -replace "\d*(\d{8})", "`$1"
+        $key = "$key $pre"
+
+        echo $key
+
+        $order[$key] = $value
+    }
+
+    return $order.GetEnumerator() | Sort -Property Name | % { $_.value }
+}
+
 function Resolve-PackageVersion
 {
     param(
@@ -20,7 +52,6 @@ function Resolve-PackageVersion
         [string]$versionToTarget,
         [Parameter(Mandatory = $true)][Alias("From")]
         [string[]]$packageSearchUrls
-
     )
 
     write-host "##[debug] ****** RESOLVE TARGET VERSION *********"
@@ -33,8 +64,9 @@ function Resolve-PackageVersion
         $searchResults = Invoke-RestMethod -Uri $searchQuery
         if ($searchResults.totalHits -gt 0)
         {
-            $searchResults.data = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
-            ForEach ($v in $searchResults.data.versions)
+            $packageData = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
+            $packageVersions = Get-SortedSemanticVersions $packageData.versions       ## Sort semantic version X.Y.Z.Rev-Prerelease
+            ForEach ($v in $packageVersions)
             {
                 write-host "##[debug] Found Version: $($v.version)"
                 $newVersion = $v.version
