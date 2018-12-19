@@ -1,17 +1,17 @@
 {
     "id": "7cc908ff-c485-45ea-90a6-6ac6f904687c",
     "name": "nugetversioning",
-    "friendlyName": "Nuget Versioning PS",
+    "friendlyName": "Nuget Versioning",
     "description": "Tool used to resolve Nuget package version in csproj file",
-    "helpMarkDown": "Nuget Version Resolver PS",
+    "helpMarkDown": "Nuget Version Resolver",
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 16,
+        "Major": 28,
         "Minor": 0,
         "Patch": 1
     },
-    "instanceNameFormat": "Resolve project package versions with lastest $(versionToTarget) version [PS]",
+    "instanceNameFormat": "Resolve project package versions with lastest $(versionToTarget) version",
     "inputs": [
         {
             "name": "pathToProjects",

@@ -17,22 +17,32 @@ function Resolve-PackageVersion
         [Parameter(Mandatory = $true)]
         [string]$packageId,
         [Parameter(Mandatory = $true)]
-        [string]$packageSearchUrls
+        [string]$versionToTarget,
+        [Parameter(Mandatory = $true)][Alias("From")]
+        [string[]]$packageSearchUrls
+
     )
 
     write-host "##[debug] ****** RESOLVE TARGET VERSION *********"
-    $jsonResult = Invoke-RestMethod -Uri "https://api-v2v3search-0.nuget.org/query?q=PackageId:%22$packageId%22&prerelease=true"
-    if ($jsonResult.totalHits -gt 0)
+    $newVersion = '[NO_VERSION]'
+    if ($versionToTarget -eq 'stable') {$prerelease = 'false'} else {$prerelease = 'true'}
+    foreach ($packageSearchUrl in $packageSearchUrls)
     {
-        $newVersion = '[NO_VERSION]'
-        write-host "##[debug] Search Package Versions for: $packageId"
-        ForEach ($v in $jsonResult.data.versions)
+        $searchQuery = "$packageSearchUrl`?q=$packageId&prerelease=$prerelease"
+        write-host "##[debug] Package search query: $searchQuery"
+        $searchResults = Invoke-RestMethod -Uri $searchQuery
+        if ($searchResults.totalHits -gt 0)
         {
-            write-host "##[debug] Found Version: $($v.version)"
-            $newVersion = $v.version
+            $searchResults.data = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
+            ForEach ($v in $searchResults.data.versions)
+            {
+                write-host "##[debug] Found Version: $($v.version)"
+                $newVersion = $v.version
+            }
         }
-        return $newVersion
+        if ($newVersion -ne '[NO_VERSION]') { break }
     }
+    return $newVersion
 }
 
 function Get-PackageSearchUrlsFromNugetConfig
@@ -41,7 +51,7 @@ function Get-PackageSearchUrlsFromNugetConfig
         [Parameter(Mandatory = $true)]
         [string]$pathToNugetConfig
     )
-    $packageSearchUrls = @()
+    [string[]]$packageSearchUrls = @()
 
     $nugetConfigFile = Get-ChildItem -Path "$srcDir\$pathToNugetConfig" -Recurse | Select-Object -First 1
     if (!$nugetConfigFile)
@@ -63,8 +73,9 @@ function Get-PackageSearchUrlsFromNugetConfig
                 $resources = $packageSourceDetails.resources | Where-Object { $_.'@type' -like '*SearchQueryService*' }
                 foreach ($resource in $resources)
                 {
-                    "Adding package search Url: $resources"
-                    $packageSearchUrls += $resources.'@id'
+                    $packageSearchUrl = $resource.'@id'
+                    $packageSearchUrls += $packageSearchUrl
+                    Write-Host "Found package search Url: $($packageSearchUrl)"
                 }
             }
         }
@@ -113,7 +124,7 @@ try
             $packageVersion = $packageRef.Attributes["Version"].Value
             if ($packageVersion -eq '*')
             {
-                $packageVersion = Resolve-PackageVersion $packageId $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageId $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }

@@ -1,9 +1,9 @@
 {
     "id": "6c45ebd7-7597-4e28-b043-c2721d9e4abe",
     "name": "nugetversioning",
-    "friendlyName": "Nuget Versioning",
-    "description": "Tool used to resolve Nuget package version in csproj file",
-    "helpMarkDown": "",
+    "friendlyName": "Tool Name",
+    "description": "Tool Description",
+    "helpMarkDown": "Tool Help",
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
