@@ -137,7 +137,7 @@ try
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
     write-host "pathToProjects = $pathToProjects"
-    write-host "projectToTarget = $versionToTarget"
+    write-host "versionToTarget = $versionToTarget"
     write-host "pathToNugetConfig = $pathToNugetConfig"
 
     write-host "##[section] ****** FIND PACKAGE SOURCES *********"
