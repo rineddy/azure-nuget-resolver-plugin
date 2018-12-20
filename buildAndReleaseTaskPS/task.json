@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 30,
+        "Major": 31,
         "Minor": 0,
         "Patch": 1
     },
@@ -16,7 +16,7 @@
         {
             "name": "pathToProjects",
             "label": "Path to project(s)",
-            "helpMarkDown": "Search .csproj file",
+            "helpMarkDown": "Search `.csproj` file",
             "type": "string",
             "defaultValue": "**/*.csproj",
             "required": true
@@ -24,20 +24,33 @@
         {
             "name": "pathToNugetConfig",
             "label": "Path to NuGet.Config",
-            "helpMarkDown": "Search NuGet.Config file",
+            "helpMarkDown": "Search `NuGet.Config` file",
             "type": "string",
             "defaultValue": "**/NuGet.Config",
-            "required": false
+            "required": true
         },
         {
             "name": "versionToTarget",
             "label": "Version to target",
-            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+            "helpMarkDown": "Determines how to resolve package version number",
             "type": "pickList",
             "defaultValue": "stable",
             "options": {
                 "stable": "Find lastest stable version",
                 "stable or prerelease": "Find lastest stable or prerelease version"
+            },
+            "required": true
+        },
+        {
+            "name": "logVerbosity",
+            "label": "Log verbosity",
+            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+            "type": "radio",
+            "defaultValue": "normal",
+            "options": {
+                "debug": "Detailed",
+                "normal": "Normal",
+                "quiet": "Quiet"
             },
             "required": true
         }

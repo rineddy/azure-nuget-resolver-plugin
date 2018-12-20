@@ -16,29 +16,37 @@ function Get-SortedSemanticVersions
 {
     param(
         [Parameter(Mandatory = $true)]
-        [string[]]$versions
+        $packageDataVersions
     )
-
-    $order = [ordered]@{}
-    $versions | foreach-object {
-        [string]$value = $_
+    # get first and last package versions
+    $formattedVersions = @(
+        $packageDataVersions[0].Version,
+        $packageDataVersions[$packageDataVersions.length - 1].Version
+    )
+    # convert them into comparable format
+    $formattedVersions = $formattedVersions | foreach-object {
         $parts = $_.Split('-')
-        [string]$key = $parts[0]
-        [string]$pre = 'stable'
-        if ($parts.length -gt 1) {$pre = "-" + $parts[1]}
+        $version = $parts[0]
+        if ($parts.length -eq 1) {$prerelease = 'stable'} else {$prerelease = "pre-" + $parts[1]}
 
-        for ($i = ($value.Split('.').Length - 1); $i -lt 4; $i++)
+        for ($i = ($version.Split('.').Length - 1); $i -lt 4; $i++)
         {
-            $key = $key + ".0"
+            $version = $version + ".0"
         }
-        $key = $key -replace "(\d+)", "00000000`$1"
-        $key = $key -replace "\d*(\d{8})", "`$1"
-        $key = "$key $pre"
-
-        $order[$key] = $value
+        $version = $version -replace "(\d+)", "00000000`$1"
+        $version = $version -replace "\d*(\d{8})", "`$1"
+        return "$version $prerelease"
     }
-
-    return $order.GetEnumerator() | Sort -Property Name | % { $_.value }
+    # compare them to determine the current order
+    $areOrderedByDESC = $formattedVersions[0].CompareTo($formattedVersions[1]) -gt 0
+    # list all versions and reorder them if necessary
+    $versions = $packageDataVersions | foreach-object { $_.Version }
+    if ($areOrderedByDESC)
+    {
+        write-host "##[debug] Reordering versions (ASC)"
+        [array]::Reverse($versions)
+    }
+    return $versions
 }
 
 function Resolve-PackageVersion
@@ -63,8 +71,7 @@ function Resolve-PackageVersion
         if ($searchResults.totalHits -gt 0)
         {
             $packageData = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
-            $packageVersions = $packageData.versions | ForEach-Object { $_.version }
-            $packageVersions = Get-SortedSemanticVersions $packageVersions       ## Sort semantic version X.Y.Z.Rev-Prerelease
+            $packageVersions = Get-SortedSemanticVersions $packageData.versions       ## Sort semantic version X.Y.Z.Rev-Prerelease
             ForEach ($packageVersion in $packageVersions)
             {
                 write-host "##[debug] Found Version: $packageVersion"
