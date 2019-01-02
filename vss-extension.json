@@ -3,7 +3,7 @@
     "id": "nuget-versioning-task",
     "name": "Nuget Versioning Task",
     "description": "Tool used to resolve Nuget package version in csproj file",
-    "version": "0.9.88",
+    "version": "0.9.90",
     "publisher": "eddyr-gop",
     "targets": [
         {
@@ -21,7 +21,7 @@
             "path": "buildAndReleaseTask"
         },
         {
-            "path": "buildAndReleaseTaskPS"
+            "path": "nugetVersioningTask"
         }
     ],
     "contributions": [
@@ -36,13 +36,13 @@
             }
         },
         {
-            "id": "nugetversioningps",
+            "id": "nugetversioningtask",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "buildAndReleaseTaskPS"
+                "name": "nugetVersioningTask"
             }
         }
     ]

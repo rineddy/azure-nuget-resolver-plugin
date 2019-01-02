@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 31,
+        "Major": 33,
         "Minor": 0,
         "Patch": 1
     },
@@ -16,7 +16,7 @@
         {
             "name": "pathToProjects",
             "label": "Path to project(s)",
-            "helpMarkDown": "Search `.csproj` file",
+            "helpMarkDown": "Search `.csproj` file that contains package references to resolve",
             "type": "string",
             "defaultValue": "**/*.csproj",
             "required": true
@@ -24,7 +24,7 @@
         {
             "name": "pathToNugetConfig",
             "label": "Path to NuGet.Config",
-            "helpMarkDown": "Search `NuGet.Config` file",
+            "helpMarkDown": "Search `NuGet.Config` file that contains package sources in use",
             "type": "string",
             "defaultValue": "**/NuGet.Config",
             "required": true

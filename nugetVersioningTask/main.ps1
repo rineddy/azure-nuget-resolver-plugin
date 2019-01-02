@@ -60,7 +60,7 @@ function Resolve-PackageVersion
         [string[]]$packageSearchUrls
     )
 
-    write-host "##[debug] ****** RESOLVE TARGET VERSION *********"
+    write-host "##[debug] ****** RESOLVE PACKAGE VERSION *********"
     $newVersion = '[NO_VERSION]'
     if ($versionToTarget -eq 'stable') {$prerelease = 'false'} else {$prerelease = 'true'}
     foreach ($packageSearchUrl in $packageSearchUrls)
@@ -136,9 +136,11 @@ try
     $pathToProjects = Get-VstsInput -Name pathToProjects -Require
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
+    $logVerbosity = Get-VstsInput -Name logVerbosity -Require
     write-host "pathToProjects = $pathToProjects"
     write-host "versionToTarget = $versionToTarget"
     write-host "pathToNugetConfig = $pathToNugetConfig"
+    write-host "logVerbosity = $logVerbosity"
 
     write-host "##[section] ****** FIND PACKAGE SOURCES *********"
     $packageSearchUrls = Get-PackageSearchUrlsFromNugetConfig $pathToNugetConfig
