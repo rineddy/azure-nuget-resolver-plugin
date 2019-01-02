@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 33,
+        "Major": 34,
         "Minor": 0,
         "Patch": 1
     },
@@ -42,9 +42,25 @@
             "required": true
         },
         {
+            "name": "WhitelistedPackageNames",
+            "label": "Whitelisted package names",
+            "helpMarkDown": "Resolve version for following packages",
+            "type": "multiLine",
+            "defaultValue": "PackageToResolve*",
+            "required": true
+        },
+        {
+            "name": "BlacklistedPackageNames",
+            "label": "Blacklisted package names",
+            "helpMarkDown": "Keep version unchanged for following packages",
+            "type": "multiLine",
+            "defaultValue": "PackageToSkip*\nMicrosoft.*",
+            "required": true
+        },
+        {
             "name": "logVerbosity",
             "label": "Log verbosity",
-            "helpMarkDown": "Determines how to resolve package version number : stable or prerelease",
+            "helpMarkDown": "Determines the debug level of this task",
             "type": "radio",
             "defaultValue": "normal",
             "options": {
