@@ -44,17 +44,17 @@
         {
             "name": "WhitelistedPackageNames",
             "label": "Whitelisted package names",
-            "helpMarkDown": "Resolve version for following packages",
+            "helpMarkDown": "Select packages by regex pattern matching",
             "type": "multiLine",
-            "defaultValue": "PackageToResolve*",
+            "defaultValue": "PackageToResolve.*",
             "required": true
         },
         {
             "name": "BlacklistedPackageNames",
             "label": "Blacklisted package names",
-            "helpMarkDown": "Keep version unchanged for following packages",
+            "helpMarkDown": "Exclude packages by regex pattern matching",
             "type": "multiLine",
-            "defaultValue": "PackageToSkip*\nMicrosoft.*",
+            "defaultValue": "PackageToSkip.*\nMicrosoft.*",
             "required": true
         },
         {
