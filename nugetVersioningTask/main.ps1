@@ -12,16 +12,17 @@ param()
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
 
-function Get-SortedSemanticVersions
+function Get-PackageVersions
 {
     param(
         [Parameter(Mandatory = $true)]
-        $packageDataVersions
+        $packageData
     )
+    $packageVersions = $packageData.Versions | foreach-object { $_.Version }
     # get first and last package versions
     $formattedVersions = @(
-        $packageDataVersions[0].Version,
-        $packageDataVersions[$packageDataVersions.length - 1].Version
+        $packageVersions[0],
+        $packageVersions[$packageVersions.length - 1]
     )
     # convert them into comparable format
     $formattedVersions = $formattedVersions | foreach-object {
@@ -40,20 +41,19 @@ function Get-SortedSemanticVersions
     # compare them to determine the current order
     $areOrderedByDESC = $formattedVersions[0].CompareTo($formattedVersions[1]) -gt 0
     # list all versions and reorder them if necessary
-    $versions = $packageDataVersions | foreach-object { $_.Version }
     if ($areOrderedByDESC)
     {
         write-host "##[debug] Reordering versions (ASC)"
-        [array]::Reverse($versions)
+        [array]::Reverse($packageVersions)
     }
-    return $versions
+    return $packageVersions
 }
 
 function Resolve-PackageVersion
 {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$packageId,
+        [string]$packageName,
         [Parameter(Mandatory = $true)]
         [string]$versionToTarget,
         [Parameter(Mandatory = $true)][Alias("From")]
@@ -65,13 +65,13 @@ function Resolve-PackageVersion
     if ($versionToTarget -eq 'stable') {$prerelease = 'false'} else {$prerelease = 'true'}
     foreach ($packageSearchUrl in $packageSearchUrls)
     {
-        $searchQuery = "$packageSearchUrl`?q=$packageId&prerelease=$prerelease"
+        $searchQuery = "$packageSearchUrl`?q=$packageName&prerelease=$prerelease"
         write-host "##[debug] Package search query: $searchQuery"
         $searchResults = Invoke-RestMethod -Uri $searchQuery
         if ($searchResults.totalHits -gt 0)
         {
-            $packageData = $searchResults.data |Where-Object { $_.id -eq $packageId } ## Filter packageId
-            $packageVersions = Get-SortedSemanticVersions $packageData.versions       ## Sort semantic version X.Y.Z.Rev-Prerelease
+            $packageData = $searchResults.data | Where-Object { $_.id -eq $packageName } ## Filter packageName
+            $packageVersions = Get-PackageVersions $packageData         ## Sort semantic version X.Y.Z.Rev-Prerelease
             ForEach ($packageVersion in $packageVersions)
             {
                 write-host "##[debug] Found Version: $packageVersion"
@@ -160,15 +160,15 @@ try
 
         foreach ($packageRef in $packageRefs)
         {
-            $packageId = $packageRef.Attributes["Include"].Value
+            $packageName = $packageRef.Attributes["Include"].Value
             $packageVersion = $packageRef.Attributes["Version"].Value
             if ($packageVersion -eq '*')
             {
-                $packageVersion = Resolve-PackageVersion $packageId $versionToTarget -From $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }
-            write-host "Package: $packageId - Version: $packageVersion"
+            write-host "Package: $packageName - Version: $packageVersion"
         }
 
         if ($isProjectFileModified)
