@@ -12,6 +12,44 @@ param()
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
 
+function Get-PackageSearchUrlsFromNugetConfig
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$pathToNugetConfig
+    )
+    [string[]]$packageSearchUrls = @()
+
+    $nugetConfigFile = Get-ChildItem -Path "$srcDir\$pathToNugetConfig" -Recurse | Select-Object -First 1
+    if (!$nugetConfigFile)
+    {
+        Write-Host "##vso[task.logissue type=warning;]Nuget.Config not found"
+    }
+    else
+    {
+        Write-Host "Reading NugetConfig file: $($nugetConfigFile.fullname)"
+        $xmlDoc = New-Object -TypeName System.Xml.XmlDocument
+        $xmlDoc.Load($nugetConfigFile)
+        $xmlPackageSources = $xmlDoc.SelectNodes("/configuration/packageSources/add")
+        foreach ($xmlPackageSource in $xmlPackageSources)
+        {
+            $packageSourceUrl = $xmlPackageSource.Value
+            $packageSourceDetails = Invoke-RestMethod -Uri $packageSourceUrl
+            if ($packageSourceDetails.resources)
+            {
+                $resources = $packageSourceDetails.resources | Where-Object { $_.'@type' -like '*SearchQueryService*' }
+                foreach ($resource in $resources)
+                {
+                    $packageSearchUrl = $resource.'@id'
+                    $packageSearchUrls += $packageSearchUrl
+                    Write-Host "Found package search Url: $($packageSearchUrl)"
+                }
+            }
+        }
+    }
+
+    return $packageSearchUrls
+}
 function Get-PackageVersions
 {
     param(
@@ -81,45 +119,21 @@ function Resolve-PackageVersion
     return $newVersion
 }
 
-function Get-PackageSearchUrlsFromNugetConfig
+function Test-PackageToResolve
 {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$pathToNugetConfig
+        [string]$packageName,
+        [Parameter(Mandatory = $true)][Alias("Include")]
+        [string]$includedPackages,
+        [Parameter(Mandatory = $true)][Alias("Exclude")]
+        [string]$excludedPackages
     )
-    [string[]]$packageSearchUrls = @()
 
-    $nugetConfigFile = Get-ChildItem -Path "$srcDir\$pathToNugetConfig" -Recurse | Select-Object -First 1
-    if (!$nugetConfigFile)
-    {
-        Write-Host "##vso[task.logissue type=warning;]Nuget.Config not found"
-    }
-    else
-    {
-        Write-Host "Reading NugetConfig file: $($nugetConfigFile.fullname)"
-        $xmlDoc = New-Object -TypeName System.Xml.XmlDocument
-        $xmlDoc.Load($nugetConfigFile)
-        $xmlPackageSources = $xmlDoc.SelectNodes("/configuration/packageSources/add")
-        foreach ($xmlPackageSource in $xmlPackageSources)
-        {
-            $packageSourceUrl = $xmlPackageSource.Value
-            $packageSourceDetails = Invoke-RestMethod -Uri $packageSourceUrl
-            if ($packageSourceDetails.resources)
-            {
-                $resources = $packageSourceDetails.resources | Where-Object { $_.'@type' -like '*SearchQueryService*' }
-                foreach ($resource in $resources)
-                {
-                    $packageSearchUrl = $resource.'@id'
-                    $packageSearchUrls += $packageSearchUrl
-                    Write-Host "Found package search Url: $($packageSearchUrl)"
-                }
-            }
-        }
-    }
+    $isPackageToResolve = $false
 
-    return $packageSearchUrls
+    return $isPackageToResolve
 }
-
 
 # For more information on the VSTS Task SDK:
 # https://github.com/Microsoft/vsts-task-lib
@@ -127,20 +141,20 @@ Trace-VstsEnteringInvocation $MyInvocation
 try
 {
     write-host "##[section] ****** SET UP VARIABLES *********"
-    $binDir = $env:BUILD_BINARIESDIRECTORY
     $srcDir = $env:BUILD_SOURCESDIRECTORY
-    write-host "srcDir = $srcDir"
-    write-host "binDir = $binDir"
+    $binDir = $env:BUILD_BINARIESDIRECTORY
     $pathToProjects = Get-VstsInput -Name pathToProjects -Require
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
     $logVerbosity = Get-VstsInput -Name logVerbosity -Require
+    $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames -Require
+    $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames -Require
+    write-host "srcDir = $srcDir"
+    write-host "binDir = $binDir"
     write-host "pathToProjects = $pathToProjects"
     write-host "versionToTarget = $versionToTarget"
     write-host "pathToNugetConfig = $pathToNugetConfig"
     write-host "logVerbosity = $logVerbosity"
-    $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames -Require
-    $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames -Require
     write-host "whitelistedPackageNames = $whitelistedPackageNames"
     write-host "blacklistedPackageNames = $blacklistedPackageNames"
 
@@ -164,7 +178,8 @@ try
         {
             $packageName = $packageRef.Attributes["Include"].Value
             $packageVersion = $packageRef.Attributes["Version"].Value
-            if ($packageVersion -eq '*')
+            $isPackageToResolve = Test-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
+            if ($isPackageToResolve) #$packageVersion -contains '*')
             {
                 $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
