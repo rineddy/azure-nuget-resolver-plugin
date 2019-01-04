@@ -179,7 +179,7 @@ try
             $packageName = $packageRef.Attributes["Include"].Value
             $packageVersion = $packageRef.Attributes["Version"].Value
             $isPackageToResolve = Test-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
-            if ($isPackageToResolve) #$packageVersion -contains '*')
+            if ($isPackageToResolve -and $packageVersion -contains '*')
             {
                 $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
