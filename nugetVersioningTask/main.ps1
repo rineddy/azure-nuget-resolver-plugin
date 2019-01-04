@@ -19,13 +19,11 @@ function Get-PackageVersions
         $packageData
     )
     $packageVersions = $packageData.Versions | foreach-object { $_.Version }
-    # get first and last package versions
-    $formattedVersions = @(
+    # format first and last package versions
+    $packageVersionBounds = @(
         $packageVersions[0],
         $packageVersions[$packageVersions.length - 1]
-    )
-    # convert them into comparable format
-    $formattedVersions = $formattedVersions | foreach-object {
+    ) | foreach-object {
         $parts = $_.Split('-')
         $version = $parts[0]
         if ($parts.length -eq 1) {$prerelease = 'stable'} else {$prerelease = "pre-" + $parts[1]}
@@ -38,9 +36,9 @@ function Get-PackageVersions
         $version = $version -replace "\d*(\d{8})", "`$1"
         return "$version $prerelease"
     }
-    # compare them to determine the current order
-    $areOrderedByDESC = $formattedVersions[0].CompareTo($formattedVersions[1]) -gt 0
-    # list all versions and reorder them if necessary
+    # compare first and last package versions to determine current order
+    $areOrderedByDESC = $packageVersionBounds[0].CompareTo($packageVersionBounds[1]) -gt 0
+    # reorder them if necessary
     if ($areOrderedByDESC)
     {
         write-host "##[debug] Reordering versions (ASC)"
