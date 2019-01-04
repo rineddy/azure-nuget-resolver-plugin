@@ -69,7 +69,7 @@ function Resolve-PackageVersion
         if ($searchResults.totalHits -gt 0)
         {
             $packageData = $searchResults.data | Where-Object { $_.id -eq $packageName } ## Filter packageName
-            $packageVersions = Get-PackageVersions $packageData         ## Sort semantic version X.Y.Z.Rev-Prerelease
+            $packageVersions = Get-PackageVersions $packageData                          ## Sort semantic version X.Y.Z.Rev-Prerelease
             ForEach ($packageVersion in $packageVersions)
             {
                 write-host "##[debug] Found Version: $packageVersion"
@@ -139,6 +139,10 @@ try
     write-host "versionToTarget = $versionToTarget"
     write-host "pathToNugetConfig = $pathToNugetConfig"
     write-host "logVerbosity = $logVerbosity"
+    $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames -Require
+    $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames -Require
+    write-host "whitelistedPackageNames = $whitelistedPackageNames"
+    write-host "blacklistedPackageNames = $blacklistedPackageNames"
 
     write-host "##[section] ****** FIND PACKAGE SOURCES *********"
     $packageSearchUrls = Get-PackageSearchUrlsFromNugetConfig $pathToNugetConfig
@@ -171,7 +175,7 @@ try
 
         if ($isProjectFileModified)
         {
-            Write-Host "Writing project file: $($projectFile.fullname)"
+            Write-Host "Saving project file: $($projectFile.fullname)"
             $xmlDoc.Save($projectFile.fullname)
             $isProjectFileModified = $false
         }
