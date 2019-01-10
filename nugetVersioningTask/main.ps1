@@ -92,7 +92,7 @@ function Resolve-PackageVersion
         [string]$packageName,
         [Parameter(Mandatory = $true)]
         [string]$versionToTarget,
-        [Parameter(Mandatory = $true)][Alias("From")]
+        [Parameter(Mandatory = $true)][Alias("Using")]
         [string[]]$packageSearchUrls
     )
 
@@ -181,7 +181,7 @@ try
             $isPackageToResolve = Test-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
             if ($isPackageToResolve -and $packageVersion -contains '*')
             {
-                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -Using $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }
