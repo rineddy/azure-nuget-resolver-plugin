@@ -44,6 +44,7 @@ function Get-PackageSearchUrlsFromNugetConfig {
 
     return $packageSearchUrls
 }
+
 function Get-PackageVersions {
     param(
         [Parameter(Mandatory = $true)]
