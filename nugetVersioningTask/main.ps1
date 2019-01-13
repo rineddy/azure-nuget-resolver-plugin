@@ -12,8 +12,7 @@ param()
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
 
-function Get-PackageSearchUrlsFromNugetConfig
-{
+function Get-PackageSearchUrlsFromNugetConfig {
     param(
         [Parameter(Mandatory = $true)]
         [string]$pathToNugetConfig
@@ -21,25 +20,20 @@ function Get-PackageSearchUrlsFromNugetConfig
     [string[]]$packageSearchUrls = @()
 
     $nugetConfigFile = Get-ChildItem -Path "$srcDir\$pathToNugetConfig" -Recurse | Select-Object -First 1
-    if (!$nugetConfigFile)
-    {
+    if (!$nugetConfigFile) {
         Write-Host "##vso[task.logissue type=warning;]Nuget.Config not found"
     }
-    else
-    {
+    else {
         Write-Host "Reading NugetConfig file: $($nugetConfigFile.fullname)"
         $xmlDoc = New-Object -TypeName System.Xml.XmlDocument
         $xmlDoc.Load($nugetConfigFile)
         $xmlPackageSources = $xmlDoc.SelectNodes("/configuration/packageSources/add")
-        foreach ($xmlPackageSource in $xmlPackageSources)
-        {
+        foreach ($xmlPackageSource in $xmlPackageSources) {
             $packageSourceUrl = $xmlPackageSource.Value
             $packageSourceDetails = Invoke-RestMethod -Uri $packageSourceUrl
-            if ($packageSourceDetails.resources)
-            {
+            if ($packageSourceDetails.resources) {
                 $resources = $packageSourceDetails.resources | Where-Object { $_.'@type' -like '*SearchQueryService*' }
-                foreach ($resource in $resources)
-                {
+                foreach ($resource in $resources) {
                     $packageSearchUrl = $resource.'@id'
                     $packageSearchUrls += $packageSearchUrl
                     Write-Host "Found package search Url: $($packageSearchUrl)"
@@ -50,8 +44,7 @@ function Get-PackageSearchUrlsFromNugetConfig
 
     return $packageSearchUrls
 }
-function Get-PackageVersions
-{
+function Get-PackageVersions {
     param(
         [Parameter(Mandatory = $true)]
         $packageData
@@ -66,8 +59,7 @@ function Get-PackageVersions
         $version = $parts[0]
         if ($parts.length -eq 1) {$prerelease = 'stable'} else {$prerelease = "pre-" + $parts[1]}
 
-        for ($i = ($version.Split('.').Length - 1); $i -lt 4; $i++)
-        {
+        for ($i = ($version.Split('.').Length - 1); $i -lt 4; $i++) {
             $version = $version + ".0"
         }
         $version = $version -replace "(\d+)", "00000000`$1"
@@ -77,16 +69,14 @@ function Get-PackageVersions
     # compare first and last package versions to determine current order
     $areOrderedByDESC = $packageVersionBounds[0].CompareTo($packageVersionBounds[1]) -gt 0
     # reorder them if necessary
-    if ($areOrderedByDESC)
-    {
+    if ($areOrderedByDESC) {
         write-host "##[debug] Reordering versions (ASC)"
         [array]::Reverse($packageVersions)
     }
     return $packageVersions
 }
 
-function Resolve-PackageVersion
-{
+function Resolve-PackageVersion {
     param(
         [Parameter(Mandatory = $true)]
         [string]$packageName,
@@ -99,17 +89,14 @@ function Resolve-PackageVersion
     write-host "##[debug] ****** RESOLVE PACKAGE VERSION *********"
     $newVersion = '[NO_VERSION]'
     if ($versionToTarget -eq 'stable') {$prerelease = 'false'} else {$prerelease = 'true'}
-    foreach ($packageSearchUrl in $packageSearchUrls)
-    {
+    foreach ($packageSearchUrl in $packageSearchUrls) {
         $searchQuery = "$packageSearchUrl`?q=$packageName&prerelease=$prerelease"
         write-host "##[debug] Package search query: $searchQuery"
         $searchResults = Invoke-RestMethod -Uri $searchQuery
-        if ($searchResults.totalHits -gt 0)
-        {
+        if ($searchResults.totalHits -gt 0) {
             $packageData = $searchResults.data | Where-Object { $_.id -eq $packageName } ## Filter packageName
             $packageVersions = Get-PackageVersions $packageData                          ## Sort semantic version X.Y.Z.Rev-Prerelease
-            ForEach ($packageVersion in $packageVersions)
-            {
+            ForEach ($packageVersion in $packageVersions) {
                 write-host "##[debug] Found Version: $packageVersion"
                 $newVersion = $packageVersion
             }
@@ -119,8 +106,7 @@ function Resolve-PackageVersion
     return $newVersion
 }
 
-function Test-PackageToResolve
-{
+function Confirm-PackageToResolve {
     param(
         [Parameter(Mandatory = $true)]
         [string]$packageName,
@@ -131,15 +117,22 @@ function Test-PackageToResolve
     )
 
     $isPackageToResolve = $false
+    $includedPackages = $includedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+    $excludedPackages = $excludedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
 
+    foreach ($includedPackage in $includedPackages) {
+        if ($packageName -imatch $includedPackage) { $isPackageToResolve = $true; break }
+    }
+    foreach ($excludedPackage in $excludedPackages) {
+        if ($packageName -imatch $excludedPackage) { $isPackageToResolve = $false; break }
+    }
     return $isPackageToResolve
 }
 
 # For more information on the VSTS Task SDK:
 # https://github.com/Microsoft/vsts-task-lib
 Trace-VstsEnteringInvocation $MyInvocation
-try
-{
+try {
     write-host "##[section] ****** SET UP VARIABLES *********"
     $srcDir = $env:BUILD_SOURCESDIRECTORY
     $binDir = $env:BUILD_BINARIESDIRECTORY
@@ -165,8 +158,7 @@ try
     $projectFiles = Get-ChildItem -Path "$srcDir\$pathToProjects" -Recurse
     if ($projectFiles.Count -eq 0) { Write-Host "##vso[task.logissue type=warning;]Project file not found" }
 
-    foreach ($projectFile in $projectFiles)
-    {
+    foreach ($projectFile in $projectFiles) {
         Write-Host "Reading project file: $($projectFile.fullname)"
         $xmlDoc = New-Object -TypeName System.Xml.XmlDocument
         $xmlDoc.Load($projectFile)
@@ -174,13 +166,11 @@ try
         $packageRefs = $xmlDoc.GetElementsByTagName("PackageReference")
         if ($packageRefs.legnth -eq 0) { Write-Host "Package not found in $($fileName.name)" }
 
-        foreach ($packageRef in $packageRefs)
-        {
+        foreach ($packageRef in $packageRefs) {
             $packageName = $packageRef.Attributes["Include"].Value
             $packageVersion = $packageRef.Attributes["Version"].Value
-            $isPackageToResolve = Test-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
-            if ($isPackageToResolve -and $packageVersion -contains '*')
-            {
+            $isPackageToResolve = Confirm-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
+            if ($isPackageToResolve -and $packageVersion -contains '*') {
                 $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
@@ -188,16 +178,14 @@ try
             write-host "Package: $packageName - Version: $packageVersion"
         }
 
-        if ($isProjectFileModified)
-        {
+        if ($isProjectFileModified) {
             Write-Host "Saving project file: $($projectFile.fullname)"
             $xmlDoc.Save($projectFile.fullname)
             $isProjectFileModified = $false
         }
     }
 }
-finally
-{
+finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
 
