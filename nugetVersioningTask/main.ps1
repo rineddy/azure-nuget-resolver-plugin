@@ -193,12 +193,12 @@ try
 
         foreach ($packageRef in $packageRefs)
         {
-            $packageName = $packageRef.Attributes["Include"].Value
-            $packageVersion = $packageRef.Attributes["Version"].Value
+            [string]$packageName = $packageRef.Attributes["Include"].Value
+            [string]$packageVersion = $packageRef.Attributes["Version"].Value
             $isPackageToResolve = Confirm-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
-            if ($isPackageToResolve -and $packageVersion -contains '*')
+            if ($isPackageToResolve -and $packageVersion.Contains('*'))
             {
-                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -Using $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }
