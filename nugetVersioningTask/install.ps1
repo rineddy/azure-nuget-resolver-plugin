@@ -5,13 +5,17 @@
 
 Function install-psmodule($psmodule)
 {
+    Remove-Item ps_temp -force -Recurse -ErrorAction SilentlyContinue
     New-Item ps_temp -ItemType Directory -Force
     New-Item ps_modules -ItemType Directory -Force
 
-    Save-Module -Name $psmodule -Path ps_temp
-    Move-Item ps_temp/$psmodule/** ps_modules/$psmodule
+    write-host "save module: $psmodule" -ForegroundColor Green
+    Remove-Item "ps_modules/$psmodule" -force -Recurse -ErrorAction SilentlyContinue
+    Save-Module -Name $psmodule -Path ps_temp -Force
+    Move-Item "ps_temp/$psmodule/**" "ps_modules/$psmodule" -Force
 
-    Remove-Item ps_temp
+    Remove-Item ps_temp -force -Recurse
 }
+
 
 install-psmodule VstsTaskSdk
