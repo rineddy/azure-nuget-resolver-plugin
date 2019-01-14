@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "**/node_modules": true,
+        "**/ps_modules": true,
         "**/*.js": true,
         "**/package-lock.json": true
     },
