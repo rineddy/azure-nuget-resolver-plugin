@@ -2,3 +2,4 @@
 **/*.js.log
 *.vsix
 node_modules
+ps_modules
