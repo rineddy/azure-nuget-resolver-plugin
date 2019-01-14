@@ -174,7 +174,7 @@ try
 
     write-host "##[section] ****** MODIFY PROJECT FILES *********"
     $projectFiles = Get-ChildItem -Path "$srcDir\$pathToProjects" -Recurse
-    if ($projectFiles.Count -eq 0) { Write-Host "##vso[task.logissue type=warning;]Project file not found" }
+    if ($projectFiles.Count -eq 0) { Write-Host "##vso[task.logissue type=warning;]Project .csproj file not found" }
 
     foreach ($projectFile in $projectFiles)
     {
