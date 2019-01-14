@@ -50,6 +50,7 @@ function Get-PackageSearchUrlsFromNugetConfig
 
     return $packageSearchUrls
 }
+
 function Get-PackageVersions
 {
     param(
@@ -119,19 +120,29 @@ function Resolve-PackageVersion
     return $newVersion
 }
 
-function Test-PackageToResolve
+function Confirm-PackageToResolve
 {
     param(
         [Parameter(Mandatory = $true)]
         [string]$packageName,
         [Parameter(Mandatory = $true)][Alias("Include")]
-        [string]$includedPackages,
+        [string]$whiteListedPackages,
         [Parameter(Mandatory = $true)][Alias("Exclude")]
-        [string]$excludedPackages
+        [string]$blackListedPackages
     )
 
     $isPackageToResolve = $false
+    $includedPackages = $whiteListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+    $excludedPackages = $blackListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
 
+    foreach ($includedPackage in $includedPackages)
+    {
+        if ($packageName -imatch $includedPackage) { $isPackageToResolve = $true; break }
+    }
+    foreach ($excludedPackage in $excludedPackages)
+    {
+        if ($packageName -imatch $excludedPackage) { $isPackageToResolve = $false; break }
+    }
     return $isPackageToResolve
 }
 
@@ -178,10 +189,10 @@ try
         {
             $packageName = $packageRef.Attributes["Include"].Value
             $packageVersion = $packageRef.Attributes["Version"].Value
-            $isPackageToResolve = Test-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
+            $isPackageToResolve = Confirm-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
             if ($isPackageToResolve -and $packageVersion -contains '*')
             {
-                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -Using $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -From $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }

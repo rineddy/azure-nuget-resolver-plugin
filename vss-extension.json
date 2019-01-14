@@ -3,8 +3,9 @@
     "id": "nuget-versioning-task",
     "name": "Nuget Versioning Task",
     "description": "Tool used to resolve Nuget package version in csproj file",
-    "version": "0.9.95",
-    "publisher": "eddyr-gop",
+    "version": "0.9.98",
+    "publisher_": "eddyr-gop",
+    "publisher": "eddy-r",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
