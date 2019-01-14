@@ -112,14 +112,14 @@ function Confirm-PackageToResolve {
         [Parameter(Mandatory = $true)]
         [string]$packageName,
         [Parameter(Mandatory = $true)][Alias("Include")]
-        [string]$includedPackages,
+        [string]$whiteListedPackages,
         [Parameter(Mandatory = $true)][Alias("Exclude")]
-        [string]$excludedPackages
+        [string]$blackListedPackages
     )
 
     $isPackageToResolve = $false
-    $includedPackages = $includedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
-    $excludedPackages = $excludedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+    $includedPackages = $whiteListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+    $excludedPackages = $blackListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
 
     foreach ($includedPackage in $includedPackages) {
         if ($packageName -imatch $includedPackage) { $isPackageToResolve = $true; break }
