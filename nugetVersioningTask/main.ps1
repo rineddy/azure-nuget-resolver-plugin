@@ -163,7 +163,7 @@ try
     $pathToProjects = Get-VstsInput -Name pathToProjects -Require
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
-    $logVerbosity = Get-VstsInput -Name logVerbosity -Require
+    $logVerbosity = @('quiet', 'normal', 'debug').IndexOf($(Get-VstsInput -Name logVerbosity -Require))
     $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames
     $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames
     write-host "srcDir = $srcDir"
