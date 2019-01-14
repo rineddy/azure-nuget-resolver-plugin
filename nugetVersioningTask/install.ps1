@@ -1,6 +1,6 @@
 ###########################################################
-# Install technical prerequisites
-# for Powershell Build Task
+# Script to install technical prerequisites for Powershell Build Task
+# used in your package.json script
 ###########################################################
 
 Function install-psmodule($psmodule)
