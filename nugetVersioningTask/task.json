@@ -47,7 +47,7 @@
             "helpMarkDown": "Select packages by regex pattern matching",
             "type": "multiLine",
             "defaultValue": "PackageToResolve.*",
-            "required": true
+            "required": false
         },
         {
             "name": "blacklistedPackageNames",
@@ -55,7 +55,7 @@
             "helpMarkDown": "Exclude packages by regex pattern matching",
             "type": "multiLine",
             "defaultValue": "PackageToSkip.*\nMicrosoft.*",
-            "required": true
+            "required": false
         },
         {
             "name": "logVerbosity",

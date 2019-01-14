@@ -125,23 +125,29 @@ function Confirm-PackageToResolve
     param(
         [Parameter(Mandatory = $true)]
         [string]$packageName,
-        [Parameter(Mandatory = $true)][Alias("Include")]
+        [Alias("Include")]
         [string]$whiteListedPackages,
-        [Parameter(Mandatory = $true)][Alias("Exclude")]
+        [Alias("Exclude")]
         [string]$blackListedPackages
     )
 
-    $isPackageToResolve = $false
-    $includedPackages = $whiteListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
-    $excludedPackages = $blackListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
-
-    foreach ($includedPackage in $includedPackages)
+    $isPackageToResolve = $true
+    if ($whiteListedPackages)
     {
-        if ($packageName -imatch $includedPackage) { $isPackageToResolve = $true; break }
+        $isPackageToResolve = $false
+        $includedPackages = $whiteListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+        foreach ($includedPackage in $includedPackages)
+        {
+            if ($packageName -imatch $includedPackage) { $isPackageToResolve = $true; break }
+        }
     }
-    foreach ($excludedPackage in $excludedPackages)
+    if ($blackListedPackages)
     {
-        if ($packageName -imatch $excludedPackage) { $isPackageToResolve = $false; break }
+        $excludedPackages = $blackListedPackages.Split("`r`n".ToCharArray(), [System.StringSplitOptions]::RemoveEmptyEntries)
+        foreach ($excludedPackage in $excludedPackages)
+        {
+            if ($packageName -imatch $excludedPackage) { $isPackageToResolve = $false; break }
+        }
     }
     return $isPackageToResolve
 }
@@ -158,8 +164,8 @@ try
     $versionToTarget = Get-VstsInput -Name versionToTarget -Require
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
     $logVerbosity = Get-VstsInput -Name logVerbosity -Require
-    $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames -Require
-    $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames -Require
+    $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames
+    $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames
     write-host "srcDir = $srcDir"
     write-host "binDir = $binDir"
     write-host "pathToProjects = $pathToProjects"
