@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "postinstall": "cd buildAndReleaseTask && npm install && cd ../nugetVersioningTask && @powershell -NoProfile -ExecutionPolicy Unrestricted -Command './install.ps1'",
+        "postinstall": "cd buildAndReleaseTask && npm install && cd ../nugetVersioningTask && @powershell -NoProfile -ExecutionPolicy Unrestricted -File install.ps1",
         "test": "cd buildAndReleaseTask && npm run test",
         "test_trace": "cd buildAndReleaseTask && npm run test_trace",
         "compile": "cd buildAndReleaseTask && tsc -b",

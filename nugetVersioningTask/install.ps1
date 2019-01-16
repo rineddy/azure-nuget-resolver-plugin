@@ -3,8 +3,7 @@
 # used in your package.json script
 ###########################################################
 
-Function install-psmodule($psmodule)
-{
+Function install-psmodule($psmodule) {
     Remove-Item ps_temp -force -Recurse -ErrorAction SilentlyContinue
     New-Item ps_temp -ItemType Directory -Force
     New-Item ps_modules -ItemType Directory -Force
@@ -17,5 +16,5 @@ Function install-psmodule($psmodule)
     Remove-Item ps_temp -force -Recurse
 }
 
-
 install-psmodule VstsTaskSdk
+
