@@ -92,14 +92,14 @@ function Resolve-PackageVersion
         [Parameter(Mandatory = $true)]
         [string]$packageName,
         [Parameter(Mandatory = $true)]
-        [string]$versionToTarget,
+        [bool]$prereleaseAllowed,
         [Parameter(Mandatory = $true)][Alias("Using")]
         [string[]]$packageSearchUrls
     )
 
     write-host "##[debug] ****** RESOLVE PACKAGE VERSION *********"
     $newVersion = '[NO_VERSION]'
-    if ($versionToTarget -eq 'stable') {$prerelease = 'false'} else {$prerelease = 'true'}
+    if ($prereleaseAllowed) {$prerelease = 'true'} else {$prerelease = 'false'}
     foreach ($packageSearchUrl in $packageSearchUrls)
     {
         $searchQuery = "$packageSearchUrl`?q=$packageName&prerelease=$prerelease"
@@ -160,16 +160,22 @@ try
     write-host "##[section] ****** SET UP VARIABLES *********"
     $srcDir = $env:BUILD_SOURCESDIRECTORY
     $binDir = $env:BUILD_BINARIESDIRECTORY
+    $repoUri = $env:BUILD_REPOSITORY_URI
+    $srcBranch = $env:SOURCEBRANCH
     $pathToProjects = Get-VstsInput -Name pathToProjects -Require
-    $versionToTarget = Get-VstsInput -Name versionToTarget -Require
+    $branchesUsingStableOrPrereleaseVersions = Get-VstsInput -Name branchesUsingStableOrPrereleaseVersions -Require
+    $prereleaseAllowed = $repoUri -imatch $branchesUsingStableOrPrereleaseVersions
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
     $logVerbosity = @('quiet', 'normal', 'debug').IndexOf($(Get-VstsInput -Name logVerbosity -Require))
     $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames
     $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames
     write-host "srcDir = $srcDir"
     write-host "binDir = $binDir"
+    write-host "repoUri = $repoUri"
+    write-host "srcBranch = $srcBranch"
     write-host "pathToProjects = $pathToProjects"
-    write-host "versionToTarget = $versionToTarget"
+    write-host "branchesUsingStableOrPrereleaseVersions = $branchesUsingStableOrPrereleaseVersions"
+    write-host "prereleaseAllowed = $prereleaseAllowed"
     write-host "pathToNugetConfig = $pathToNugetConfig"
     write-host "logVerbosity = $logVerbosity"
     write-host "whitelistedPackageNames = $whitelistedPackageNames"
@@ -198,7 +204,7 @@ try
             $isPackageToResolve = Confirm-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
             if ($isPackageToResolve -and $packageVersion.Contains('*'))
             {
-                $packageVersion = Resolve-PackageVersion $packageName $versionToTarget -Using $packageSearchUrls
+                $packageVersion = Resolve-PackageVersion $packageName $prereleaseAllowed -Using $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
                 $isProjectFileModified = $true
             }

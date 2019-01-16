@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 41,
+        "Major": 42,
         "Minor": 0,
         "Patch": 1
     },
@@ -27,6 +27,14 @@
             "helpMarkDown": "Search `NuGet.Config` file that contains package sources in use",
             "type": "string",
             "defaultValue": "**/NuGet.Config",
+            "required": true
+        },
+        {
+            "name": "branchesUsingStableOrPrereleaseVersions",
+            "label": "Branches using package resolution with lastest stable or prerelease versions",
+            "helpMarkDown": "Regex pattern used to select prerelease branches",
+            "type": "string",
+            "defaultValue": "Dev",
             "required": true
         },
         {
