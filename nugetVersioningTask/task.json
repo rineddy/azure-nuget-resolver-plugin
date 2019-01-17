@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 43,
+        "Major": 45,
         "Minor": 0,
         "Patch": 1
     },
@@ -30,24 +30,25 @@
             "required": true
         },
         {
-            "name": "branchesUsingStableOrPrereleaseVersions",
-            "label": "Branches using package resolution with lastest stable or prerelease versions",
-            "helpMarkDown": "Regex pattern used to select prerelease branches",
-            "type": "string",
-            "defaultValue": "Dev",
-            "required": true
-        },
-        {
             "name": "versionToTarget",
-            "label": "Version to target",
+            "label": "How to perform package resolution",
             "helpMarkDown": "Determines how to resolve package version number",
             "type": "pickList",
-            "defaultValue": "stable",
+            "defaultValue": "stable or prerelease",
             "options": {
                 "stable": "Find lastest stable version",
                 "stable or prerelease": "Find lastest stable or prerelease version"
             },
             "required": true
+        },
+        {
+            "name": "branchesUsingStableOrPrereleaseVersions",
+            "label": "Branches using package resolution with lastest stable or prerelease versions",
+            "helpMarkDown": "Regex pattern used to select prerelease/dev branches",
+            "type": "string",
+            "defaultValue": "Dev",
+            "required": true,
+            "visibleRule": "versionToTarget != stable"
         },
         {
             "name": "whitelistedPackageNames",

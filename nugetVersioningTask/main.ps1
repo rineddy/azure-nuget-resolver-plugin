@@ -161,10 +161,16 @@ try
     $srcDir = $env:BUILD_SOURCESDIRECTORY
     $binDir = $env:BUILD_BINARIESDIRECTORY
     $repoUri = $env:BUILD_REPOSITORY_URI
-    $srcBranch = $env:SOURCEBRANCH
+    $srcBranch = $env:BUILD_SOURCEBRANCHNAME
     $pathToProjects = Get-VstsInput -Name pathToProjects -Require
-    $branchesUsingStableOrPrereleaseVersions = Get-VstsInput -Name branchesUsingStableOrPrereleaseVersions -Require
-    $prereleaseAllowed = $repoUri -imatch $branchesUsingStableOrPrereleaseVersions
+    $versionToTarget = Get-VstsInput -Name versionToTarget -Require
+    $branchesUsingStableOrPrereleaseVersions = ''
+    $prereleaseAllowed = $false
+    if ($versionToTarget -ieq 'stable or prerelease')
+    {
+        $branchesUsingStableOrPrereleaseVersions = Get-VstsInput -Name branchesUsingStableOrPrereleaseVersions -Require
+        $prereleaseAllowed = $srcBranch -imatch $branchesUsingStableOrPrereleaseVersions
+    }
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
     $logVerbosity = @('quiet', 'normal', 'debug').IndexOf($(Get-VstsInput -Name logVerbosity -Require))
     $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames
@@ -174,6 +180,7 @@ try
     write-host "repoUri = $repoUri"
     write-host "srcBranch = $srcBranch"
     write-host "pathToProjects = $pathToProjects"
+    write-host "versionToTarget = $versionToTarget"
     write-host "branchesUsingStableOrPrereleaseVersions = $branchesUsingStableOrPrereleaseVersions"
     write-host "prereleaseAllowed = $prereleaseAllowed"
     write-host "pathToNugetConfig = $pathToNugetConfig"
@@ -202,7 +209,7 @@ try
             [string]$packageName = $packageRef.Attributes["Include"].Value
             [string]$packageVersion = $packageRef.Attributes["Version"].Value
             $isPackageToResolve = Confirm-PackageToResolve $packageName -Include $whitelistedPackageNames -Exclude $blacklistedPackageNames
-            if ($isPackageToResolve -and $packageVersion.Contains('*'))
+            if ($isPackageToResolve)
             {
                 $packageVersion = Resolve-PackageVersion $packageName $prereleaseAllowed -Using $packageSearchUrls
                 $packageRef.SetAttribute("Version", $packageVersion)
