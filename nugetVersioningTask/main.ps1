@@ -12,6 +12,14 @@ param()
 #     Write-Output ("##vso[task.setvariable variable=" + $varName + ";]" + $varValue )
 # }
 
+function Write-HostVerboseLevel($verbosityLevel, $message)
+{
+    if ($verbosityLevel -le $global:logVerbosity)
+    {
+        write-host $message
+    }
+}
+
 function Get-PackageSearchUrlsFromNugetConfig
 {
     param(
@@ -80,7 +88,7 @@ function Get-PackageVersions
     # reorder them if necessary
     if ($areOrderedByDESC)
     {
-        write-host "##[debug] Reordering versions (ASC)"
+        Write-HostVerboseLevel "##[debug] Reordering versions (ASC)" -verbosityLevel 2
         [array]::Reverse($packageVersions)
     }
     return $packageVersions
@@ -97,13 +105,13 @@ function Resolve-PackageVersion
         [string[]]$packageSearchUrls
     )
 
-    write-host "##[debug] ****** RESOLVE PACKAGE VERSION *********"
+    Write-HostVerboseLevel "##[debug] ****** RESOLVE PACKAGE VERSION *********" -verbosityLevel 1
     $newVersion = '[NO_VERSION]'
     if ($prereleaseAllowed) {$prerelease = 'true'} else {$prerelease = 'false'}
     foreach ($packageSearchUrl in $packageSearchUrls)
     {
         $searchQuery = "$packageSearchUrl`?q=$packageName&prerelease=$prerelease"
-        write-host "##[debug] Package search query: $searchQuery"
+        Write-HostVerboseLevel "##[debug] Package search query: $searchQuery"  -verbosityLevel 1
         $searchResults = Invoke-RestMethod -Uri $searchQuery
         if ($searchResults.totalHits -gt 0)
         {
@@ -111,7 +119,7 @@ function Resolve-PackageVersion
             $packageVersions = Get-PackageVersions $packageData                          ## Sort semantic version X.Y.Z.Rev-Prerelease
             ForEach ($packageVersion in $packageVersions)
             {
-                write-host "##[debug] Found Version: $packageVersion"
+                Write-HostVerboseLevel "##[debug] Found Version: $packageVersion" -verbosityLevel 2
                 $newVersion = $packageVersion
             }
         }
@@ -172,7 +180,7 @@ try
         $prereleaseAllowed = $srcBranch -imatch $branchesUsingStableOrPrereleaseVersions
     }
     $pathToNugetConfig = Get-VstsInput -Name pathToNugetConfig -Require
-    $logVerbosity = @('quiet', 'normal', 'debug').IndexOf($(Get-VstsInput -Name logVerbosity -Require))
+    $global:logVerbosity = @('quiet', 'normal', 'debug').IndexOf($(Get-VstsInput -Name logVerbosity -Require))
     $whitelistedPackageNames = Get-VstsInput -Name whitelistedPackageNames
     $blacklistedPackageNames = Get-VstsInput -Name blacklistedPackageNames
     write-host "srcDir = $srcDir"
@@ -184,7 +192,7 @@ try
     write-host "branchesUsingStableOrPrereleaseVersions = $branchesUsingStableOrPrereleaseVersions"
     write-host "prereleaseAllowed = $prereleaseAllowed"
     write-host "pathToNugetConfig = $pathToNugetConfig"
-    write-host "logVerbosity = $logVerbosity"
+    write-host "logVerbosity = $($global:logVerbosity)"
     write-host "whitelistedPackageNames = $whitelistedPackageNames"
     write-host "blacklistedPackageNames = $blacklistedPackageNames"
 

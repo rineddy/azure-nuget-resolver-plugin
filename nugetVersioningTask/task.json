@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 45,
+        "Major": 47,
         "Minor": 0,
         "Patch": 1
     },
@@ -53,7 +53,7 @@
         {
             "name": "whitelistedPackageNames",
             "label": "Whitelisted package names",
-            "helpMarkDown": "Select packages by regex pattern matching",
+            "helpMarkDown": "Regex pattern used to select packages to resolve",
             "type": "multiLine",
             "defaultValue": "PackageToResolve.*",
             "required": false
@@ -61,7 +61,7 @@
         {
             "name": "blacklistedPackageNames",
             "label": "Blacklisted package names",
-            "helpMarkDown": "Exclude packages by regex pattern matching",
+            "helpMarkDown": "Regex pattern used to exclude packages",
             "type": "multiLine",
             "defaultValue": "PackageToSkip.*\nMicrosoft.*",
             "required": false
