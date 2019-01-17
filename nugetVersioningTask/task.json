@@ -7,7 +7,7 @@
     "category": "Azure Pipelines",
     "author": "Eddy R.",
     "version": {
-        "Major": 47,
+        "Major": 48,
         "Minor": 0,
         "Patch": 1
     },
@@ -43,7 +43,7 @@
         },
         {
             "name": "branchesUsingStableOrPrereleaseVersions",
-            "label": "Branches using package resolution with lastest stable or prerelease versions",
+            "label": "Branches allowing package resolution with prerelease versions",
             "helpMarkDown": "Regex pattern used to select prerelease/dev branches",
             "type": "string",
             "defaultValue": "Dev",

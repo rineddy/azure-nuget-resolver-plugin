@@ -1,6 +1,6 @@
 {
   "name": "nugetversioning",
-  "version": "110.0.0",
+  "version": "112.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
